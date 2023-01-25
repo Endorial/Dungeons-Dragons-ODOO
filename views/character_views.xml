@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_personaje_tree" model="ir.ui.view">
+        <field name="name">personaje.tree</field>
+        <field name="model">personaje</field>
+        <field name="arch" type="xml">
+            <tree string="personajes">
+                <field name="name"/>
+                <field name="raza"/>
+                <field name="clase"/>
+                <field name="fuerza"/>
+                <field name="destreza"/>
+                <field name="constitucion"/>
+                <field name="inteligencia"/>
+                <field name="sabiduria"/>
+                <field name="carisma"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_personaje_form" model="ir.ui.view">
+        <field name="name">personaje.form</field>
+        <field name="model">personaje</field>
+        <field name="arch" type="xml">
+            <form string="personaje">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="raza"/>
+                            <field name="clase"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Atributos y ataque">
+                            <group>
+                                <group>
+                                    <button name="calcular_atributos" type="object" string="Calcular atributos" class="btn btn-primary"
+                                        attrs="{'invisible': ['|', ('raza', '=', False), ('clase', '=', False)]}" />
+                                    <button name="calcular_ataque" type="object" string="Calcular ataque" class="btn btn-primary"
+                                        attrs="{'invisible': ['|', ('raza', '=', False), ('clase', '=', False)]}" />
+                                </group>
+                                <group>
+                                    <field name="fuerza"/>
+                                    <field name="destreza"/>
+                                    <field name="constitucion"/>
+                                    <field name="inteligencia"/>
+                                    <field name="sabiduria"/>
+                                    <field name="carisma"/>
+                                    <field name="ataque" />
+                                </group>
+                            </group>
+
+                        </page>
+                        <page string="Salvación y vida">
+                            <group>
+                                <group>
+                                    <button name="calcular_salvacion" type="object" string="Calcular salvación"
+                                        class="btn btn-primary"
+                                        attrs="{'invisible': ['|', ('raza', '=', False), ('clase', '=', False)]}" />
+                                    <button name="calcular_vida" type="object" string="Calcular vida"
+                                        class="btn btn-primary"
+                                        attrs="{'invisible': ['|', ('raza', '=', False), ('clase', '=', False)]}" />
+                                </group>
+                                <group>
+                                    <field name="salvacion_fortaleza" />
+                                    <field name="salvacion_reflejos" />
+                                    <field name="salvacion_voluntad" />
+                                    <field name="vida" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_personaje" model="ir.actions.act_window">
+        <field name="name">personajes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">personaje</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="personaje" name="personajes" sequence="30" action="action_personaje" />
+
+</odoo>

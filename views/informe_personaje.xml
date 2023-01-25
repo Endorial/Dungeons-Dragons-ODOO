@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="documento_informe_personaje">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <div class="oe_structure"/>
+
+            <h2>Personaje <span t-field="o.name"/></h2>
+                <div class="row">
+                <div class="col-6">
+                    <span><strong>Raza:</strong> </span> <span t-field="o.raza" />
+                </div>
+                <div class="col-6">
+                    <span><strong>Clase:</strong> </span> <span t-field="o.clase" />
+                </div>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th><strong>Fuerza</strong></th>
+                        <th><strong>Destreza</strong></th>
+                        <th><strong>Constitución</strong></th>
+                        <th><strong>Inteligencia</strong></th>
+                        <th><strong>Sabiduría</strong></th>
+                        <th><strong>Carisma</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span t-field="o.fuerza" /></td>
+                        <td><span t-field="o.destreza" /></td>
+                        <td><span t-field="o.constitucion" /></td>
+                        <td><span t-field="o.inteligencia" /></td>
+                        <td><span t-field="o.sabiduria" /></td>
+                        <td><span t-field="o.carisma" /></td>
+                    </tr>                
+                </tbody>
+            </table>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th><strong>Ataque</strong></th>
+                        <th><strong>Salvación fortaleza </strong></th>
+                        <th><strong>Salvación reflejos</strong></th>
+                        <th><strong>Salvación voluntad</strong></th>
+                        <th><strong>Vida</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span t-field="o.ataque" /></td>
+                        <td><span t-field="o.salvacion_fortaleza" /></td>
+                        <td><span t-field="o.salvacion_reflejos" /></td>
+                        <td><span t-field="o.salvacion_voluntad" /></td>
+                        <td><span t-field="o.vida" /></td>
+                    </tr>                
+                </tbody>
+            </table>
+            
+
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<template id="informe_personaje">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="dragons.documento_informe_personaje" />
+        </t>
+    </t>
+</template>
+
+
+        <record id="accion_informe_personaje" model="ir.actions.report">
+            <field name="name">Personaje</field>
+            <field name="model">personaje</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">dragons.informe_personaje</field>
+            <field name="report_file">dragons.informe_personaje</field>
+            <field name="print_report_name">'Personaje - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_personaje"/>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>

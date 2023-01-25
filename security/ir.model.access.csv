@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_personaje_user,undefined.personaje,model_personaje,base.group_user,1,1,1,1
