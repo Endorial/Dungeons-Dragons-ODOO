@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+
 import logging
 _logger = logging.getLogger(__name__)
 from datetime import datetime
@@ -25,7 +26,8 @@ class Personaje(models.Model):
 
     def calcular_vida(self):
         modificadores = self.get_modificadores()
-        # Guardamos las caras del dado de cada clase para saber qué posible puntuación de vida tendrá el personaje
+        # We keep the faces of the die of each class to know what possible life score the character will have
+
         caras_dado = {
             'barbaro' : 12,
             'bardo' : 6,
@@ -39,25 +41,25 @@ class Personaje(models.Model):
             'paladin' : 10,
             'picaro' : 6
         }
-        # Cargamos el modificador de constitucion
+        # We load the constitution modifier
         modificador_constitucion = modificadores[str(self.constitucion)]
-        # Si es menor que cero, no restamos nada
+        # If it is less than zero, we don't subtract anything
         if modificador_constitucion < 0:
             modificador_constitucion = 0
-        # Sumamos los puntos del dado más el modificador de constitución
+        # We add the points of the die plus the constitution modifier
         self.vida = random.randint(1, caras_dado[self.clase]) + modificador_constitucion
 
     def calcular_salvacion(self):
-        # Cargamos los modificadores y la habilidad principal del personaje
+        # We load the modifiers and the main ability of the character
         modificadores = self.get_modificadores()
         habilidad_principal = self.get_habilidad_principal()
-        # Calculamos los puntos de la habilidad principal del personaje
+        # We calculate the points of the character's main ability
         puntos_habilidad_principal = self[habilidad_principal[self.clase]]
-        # Calculamos los puntos de ataque a sumar en función del modificador
+        # We calculate the attack points to add based on the modifier
         puntos_modificador = modificadores[str(puntos_habilidad_principal)]
         suma_ataque = self.get_ataque()
         
-        # Y guardamos los puntos que se suman de fortaleza de cada clase
+        # And we keep the points that are added for strength of each class
         suma_fortaleza = {
             'barbaro' : 2,
             'bardo' : 0,
@@ -73,7 +75,7 @@ class Personaje(models.Model):
         }
         self.salvacion_fortaleza = suma_ataque[self.clase] + puntos_modificador + suma_fortaleza[self.clase]
 
-        # Y guardamos los puntos que se suman de reflejos de cada clase
+        # And we keep the points that are added from reflexes of each class
         suma_reflejos = {
             'barbaro' : 0,
             'bardo' : 2,
@@ -89,7 +91,7 @@ class Personaje(models.Model):
         }
         self.salvacion_reflejos = suma_ataque[self.clase] + puntos_modificador + suma_reflejos[self.clase]
         
-        # Y guardamos los puntos que se suman de voluntad de cada clase
+        # And we keep the points that are added of will of each class
         suma_voluntad = {
             'barbaro' : 0,
             'bardo' : 2,
@@ -109,26 +111,26 @@ class Personaje(models.Model):
         modificadores = self.get_modificadores()
         habilidad_principal = self.get_habilidad_principal()
         suma_ataque = self.get_ataque()
-        # Calculamos los puntos de la habilidad principal del personaje
+        # We calculate the points of the character's main ability
         puntos_habilidad_principal = self[habilidad_principal[self.clase]]
-        # Calculamos los puntos de ataque a sumar en función del modificador
+        # We calculate the attack points to add based on the modifier
         self.ataque = modificadores[str(puntos_habilidad_principal)] + puntos_habilidad_principal
-        # Calculamos los puntos de ataque a sumar en función de su clase
+        # We calculate the attack points to add based on your class
         self.ataque = self.ataque + suma_ataque[self.clase]
         
     def calcular_atributos(self):
         atributos = []
-        # Tiramos 7 tiradas de 4 dados con 6 caras cada uno
+        # We roll 7 rolls of 4 dice with 6 faces each
         for i in range(1,8):
             dado1 = random.randint(1,6)
             dado2 = random.randint(1,6)
             dado3 = random.randint(1,6)
             dado4 = random.randint(1,6)
-            #Sumamos los datos eliminando el menor
+            #We add the data by eliminating the smallest
             dados = self.sumar_dados(dado1, dado2, dado3, dado4)
             atributos.append(dados)
             
-        # Asignamos los puntos a cada atrtibuto
+        # We assign the points to each attribute
         self.write({
             'fuerza': atributos[0],
             'destreza': atributos[1],
@@ -141,7 +143,7 @@ class Personaje(models.Model):
         self.generar_sobrenombre()
 
     def generar_sobrenombre(self):
-        # Guardamos los posibles sobrenombres por raza
+        # We save possible nicknames by race
         nombres_por_raza = {
             'humano' : ['el hijo del herrero', 'el hijo del posadero', 'el huérfano', 'el vagabundo', 'el extranjero'],
             'elfo' : ['orejas picudas', 'el estirado', 'el silvano', 'el eterno', 'de las montañas nubladas'],
@@ -151,7 +153,7 @@ class Personaje(models.Model):
             'gnomo' : ['el loco', 'Gnometoques', 'el pequeño', 'el hijo del joyero', 'Kabum'],
             'mediano' : ['el medio-hombre', 'el Hobbit', 'de la Comarca', 'el fumador en pipa', 'el hijo del molinero'],
         }
-        # Guardamos los posibles  sobrenombres por atributo mayor de 18
+        # We save the possible nicknames by attribute greater than 18
         nombres_por_atributo_18 = {
             'fuerza' : ['el fuerte', 'el herrero', 'el bocadillo de nudillos'],
             'destreza' : ['el ágil', 'el rápido', 'el ojo del halcón'],
@@ -160,7 +162,7 @@ class Personaje(models.Model):
             'sabiduria' : ['el sabio', 'el vividor', 'el conocedor de secretos'],
             'carisma' : ['el guapo', 'el imponente', 'pico de oro'],
         }
-        # Guardamos los posibles  sobrenombres por atributo menor de 5
+        # We save the possible nicknames by attribute less than 5
         nombres_por_atributo_5 = {
             'fuerza': ['el flojo', 'caricias', 'dedos de papel'],
             'destreza' : ['el torpe', 'el lento', 'manos de mantequilla'],
@@ -170,7 +172,7 @@ class Personaje(models.Model):
             'carisma' : ['el feo', 'cara-de-pez', 'el difícil de mirar'],
         }
         posibles_nombres = nombres_por_raza[self.raza]
-        # Añadimos los posibles nombres en función de la raza y los puntos por atributo
+        #Added possible names based on race and attribute points
         if self.fuerza >= 18:
             posibles_nombres += nombres_por_atributo_18['fuerza']
         if self.destreza >= 18:
@@ -197,11 +199,11 @@ class Personaje(models.Model):
         if self.carisma <= 5:
             posibles_nombres += nombres_por_atributo_5['carisma']
         
-        # Cogemos un nombre aleatorio
+        # We take a random name
         self.name = posibles_nombres[random.randint(0, len(posibles_nombres) - 1)]
 
     def actualizar_puntos_por_raza(self):
-        # En función de la raza del personaje, le sumamos unos puntos
+        # Depending on the character's race, we add some points
         raza = self.raza
         if raza == 'elfo':
             self.write({
@@ -245,7 +247,7 @@ class Personaje(models.Model):
         return (dado1 + dado2 + dado3 + dado4) - menor
 
     def get_ataque(self):
-        # Y guardamos los puntos que se suman al ataque de cada clase
+        # And we keep the points that add to the attack of each class
         suma_ataque = {
             'barbaro' : 1,
             'bardo' : 0,
@@ -262,7 +264,7 @@ class Personaje(models.Model):
         return suma_ataque
 
     def get_habilidad_principal(self):
-        # Guardamos la habilidad principal de cada clase de personaje
+        # We saved the main ability of each character class
         habilidad_principal = {
             'barbaro' : 'fuerza',
             'bardo' : 'carisma',
@@ -279,7 +281,7 @@ class Personaje(models.Model):
         return habilidad_principal
 
     def get_modificadores(self):
-        # Guardamos en un diccionario los modificadores en función de la puntuación de los atributos
+        # We save in a dictionary the modifiers based on the score of the attributes
         modificadores = {
             "0" : -5,
             "1" : -5,
