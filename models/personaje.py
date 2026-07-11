@@ -57,8 +57,7 @@ class Personaje(models.Model):
         puntos_habilidad_principal = self[habilidad_principal[self.clase]]
         # We calculate the attack points to add based on the modifier
         puntos_modificador = modificadores[str(puntos_habilidad_principal)]
-        suma_ataque = self.get_ataque()
-        
+
         # And we keep the points that are added for strength of each class
         suma_fortaleza = {
             'barbaro' : 2,
@@ -73,7 +72,7 @@ class Personaje(models.Model):
             'paladin' : 2,
             'picaro' : 0
         }
-        self.salvacion_fortaleza = suma_ataque[self.clase] + puntos_modificador + suma_fortaleza[self.clase]
+        self.salvacion_fortaleza = puntos_modificador + suma_fortaleza[self.clase]
 
         # And we keep the points that are added from reflexes of each class
         suma_reflejos = {
@@ -89,7 +88,7 @@ class Personaje(models.Model):
             'paladin' : 0,
             'picaro' : 2
         }
-        self.salvacion_reflejos = suma_ataque[self.clase] + puntos_modificador + suma_reflejos[self.clase]
+        self.salvacion_reflejos = puntos_modificador + suma_reflejos[self.clase]
         
         # And we keep the points that are added of will of each class
         suma_voluntad = {
@@ -105,7 +104,7 @@ class Personaje(models.Model):
             'paladin' : 0,
             'picaro' : 0
         }
-        self.salvacion_voluntad = suma_ataque[self.clase] + puntos_modificador + suma_voluntad[self.clase]
+        self.salvacion_voluntad = puntos_modificador + suma_voluntad[self.clase]
 
     def calcular_ataque(self):
         modificadores = self.get_modificadores()
@@ -114,7 +113,7 @@ class Personaje(models.Model):
         # We calculate the points of the character's main ability
         puntos_habilidad_principal = self[habilidad_principal[self.clase]]
         # We calculate the attack points to add based on the modifier
-        self.ataque = modificadores[str(puntos_habilidad_principal)] + puntos_habilidad_principal
+        self.ataque = modificadores[str(puntos_habilidad_principal)]
         # We calculate the attack points to add based on your class
         self.ataque = self.ataque + suma_ataque[self.clase]
         
